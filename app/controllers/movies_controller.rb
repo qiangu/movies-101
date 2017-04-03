@@ -1,5 +1,5 @@
 class MoviesController < ApplicationController
-  before_action :authenticate_user!, only: [:new] 
+  before_action :authenticate_user!, only: [:new]
 
   def index
     @movies = Movie.all
@@ -19,6 +19,7 @@ class MoviesController < ApplicationController
 
   def create
     @movie = Movie.new(movie_params)
+    @group.user = current_user
 
     if @movie.save
        redirect_to movies_path
