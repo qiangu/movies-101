@@ -10,7 +10,7 @@ class MoviesController < ApplicationController
 
   def edit
     @movie = Movie.find(params[:id])
-  end 
+  end
 
   def new
     @movie = Movie.new
@@ -21,6 +21,14 @@ class MoviesController < ApplicationController
     @movie.save
 
     redirect_to movies_path
+  end
+
+  def update
+    @movie = Movie.find(params[:id])
+
+    @movie.update(movie_params)
+
+    redirect_to movies_path, notice: "更新成功，真的！"
   end
 
   private
