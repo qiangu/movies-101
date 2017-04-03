@@ -2,13 +2,6 @@
     <h2>编辑电影名</h2>
 
     <hr>
-    <%= form_for @movie do |f| %>
-
-    标题
-    <%= f.text_field :title %>
-    <br>
-
-    <%= f.submit "Submit", :disable_with => 'Submiting...' %>
-    <% end %>
+  <%= render "form" %> 
 
 </div>
