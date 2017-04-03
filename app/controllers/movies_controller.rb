@@ -1,4 +1,5 @@
 class MoviesController < ApplicationController
+  before_action :authenticate_user!, only: [:new] 
 
   def index
     @movies = Movie.all
@@ -35,7 +36,7 @@ class MoviesController < ApplicationController
       redirect_to movies_path, notice: "更新成功，真的！"
     else
       render :edit
-    end 
+    end
 
   end
 
