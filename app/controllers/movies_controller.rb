@@ -1,6 +1,6 @@
 class MoviesController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :find_movie_and_check_permission, only: [:edit, :update, :destroy]
+  before_action :find_movie_and_check_permission, only: [:edit, :update, :destroy, :join, :quit]
 
   def index
     @movies = Movie.all
@@ -8,7 +8,7 @@ class MoviesController < ApplicationController
 
   def show
     @movie = Movie.find(params[:id])
-    @posts = @movie.posts.recent 
+    @posts = @movie.posts.recent
   end
 
   def edit
@@ -23,6 +23,7 @@ class MoviesController < ApplicationController
     @movie.user = current_user
 
     if @movie.save
+       current_user.join!(@movie)
        redirect_to movies_path
     else
        render :new
@@ -46,6 +47,34 @@ class MoviesController < ApplicationController
 
     flash[:alert] = "Movie Delete"
     redirect_to movies_path
+  end
+
+  def join
+    @movie = Movie.find(params[:id])
+
+    if !current_user.is_member_of?(@movie)
+       current_user.join!(@movie)
+       flash[:notice] = "收藏成功！"
+    else
+       flash[:warning] = "你已经收藏了本电影！"
+    end
+
+    redirect_to movie_path(@movie)
+  end
+
+
+  def quit
+
+    @movie = Movie.find(params[:id])
+
+    if current_user.is_member_of?(@movie)
+       current_user.quit!(@movie)
+       flash[:alert]= "取消收藏！"
+    else
+       flash[:warning] = "你没收藏本电影啊！"
+    end
+
+    redirect_to movie_path(@movie)
   end
 
 

@@ -9,15 +9,23 @@ class PostsController < ApplicationController
 
   def create
     @movie = Movie.find(params[:movie_id])
+
+    if   current_user.is_member_of?(@movie)
     @post = Post.new(post_params)
     @post.movie = @movie
     @post.user = current_user
 
-    if @post.save
-      redirect_to movie_path(@movie)
+       if @post.save
+         redirect_to movie_path(@movie)
+       else
+         render :new
+       end
+
     else
-      render :new
+    flash[:warning] = "收藏电影才能评论！"
     end
+
+
 
   end
 
